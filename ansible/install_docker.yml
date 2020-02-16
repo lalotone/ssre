@@ -1,0 +1,41 @@
+---
+- hosts: sticky 
+  become: yes
+  tasks:
+  - name: Install required packages for installing docker
+    apt:
+      pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - software-properties-common
+      update_cache: true
+
+  - name: Add Docker GPG key
+    apt_key:
+      url: https://download.docker.com/linux/debian/gpg
+      state: present
+
+  - name: Add Docker repo
+    apt_repository:
+      repo:  "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_lsb.codename }} stable"
+      state: present
+
+  - name: Install Docker itself
+    apt:
+      pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      update_cache: true
+
+  - name: Add user to group
+    user:
+      name: fooser 
+      group: docker
+  - name: Enable docker on start
+    systemd:
+      name: docker
+      enabled: yes      
+...

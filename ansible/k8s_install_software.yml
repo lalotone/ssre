@@ -1,0 +1,23 @@
+---
+- hosts: k8s_masters_amd
+  become: yes
+  tasks:
+  - name: Add k8s apt/-key
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: Add Kubernetes APT repository
+    apt_repository:
+      repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+      filename: 'kubernetes'
+
+  - name: Install k8s software
+    apt:
+      pkg:
+        - kubelet
+        - kubeadm
+      update_cache: true
+      state: present
+...

@@ -1,0 +1,8 @@
+- hosts: k8s_workers_amd
+  become: yes
+  tasks:
+    - name: Upgrade all apt packages
+      apt:
+        name: "*"
+        update_cache: yes  
+        state: latest
